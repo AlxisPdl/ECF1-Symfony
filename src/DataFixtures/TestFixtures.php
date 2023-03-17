@@ -6,6 +6,9 @@ use DateTime;
 use App\Entity\User;
 use App\Entity\Livre;
 use App\Entity\Auteur;
+use App\Entity\Genre;
+use App\Entity\Emprunteur;
+use App\Entity\Emprunt;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -37,6 +40,9 @@ class TestFixtures extends Fixture
         $this->loadUser();
         $this->loadLivre();
         $this->loadAuteur();
+        $this->loadGenre();
+        $this->loadEmprunteur();
+        $this->loadEmprunt();
     }
 
 
@@ -268,62 +274,185 @@ class TestFixtures extends Fixture
     {
         $datas = [
             [
-                'nom' => 'auteur inconnu',
-                'prenom' => '',
-
-
-
-
+                'nom' => 'poésie',
+                'description' => null,
             ],
             [
-                'nom' => 'Cartier',
-                'prenom' => 'Hugues',
-
-
-
-
+                'nom' => 'nouvelle',
+                'description' => null,
             ],
             [
-                'nom' => 'Lambert',
-                'prenom' => 'Armand',
-
-
-
-
+                'nom' => 'roman historique',
+                'description' => null,
             ],
             [
-                'nom' => 'Moitessier',
-                'prenom' => 'Thomas',
+                'nom' => 'roman d`amour',
+                'description' => null,
             ],
-
+            [
+                'nom' => 'roman d`aventure',
+                'description' => null,
+            ],
+            [
+                'nom' => 'science-fiction',
+                'description' => null,
+            ],
+            [
+                'nom' => 'fantasy',
+                'description' => null,
+            ],
+            [
+                'nom' => 'biographie',
+                'description' => null,
+            ],
+            [
+                'nom' => 'conte',
+                'description' => null,
+            ],
+            [
+                'nom' => 'témoignage',
+                'description' => null,
+            ],
+            [
+                'nom' => 'théatre',
+                'description' => null,
+            ],
+            [
+                'nom' => 'essai',
+                'description' => null,
+            ],
+            [
+                'nom' => 'journal intime',
+                'description' => null,
+            ],
+            
+            
         ];
 
 
         foreach ($datas as $data) {
             // création d'un nouvel objet
-            $auteur = new Auteur();
+            $genre = new Genre();
             // affectation des valeurs statiques
-            $auteur->setNom($data['nom']);
-            $auteur->setPrenom($data['prenom']);
+            $genre->setNom($data['nom']);
+            $genre->setDescription($data['description']);
 
 
 
 
             // demande d'enregistrement de l'objet
-            $this->manager->persist($auteur);
+            $this->manager->persist($genre);
+        };
+        $this->manager->flush();
+    }
+
+    public function loadEmprunteur(): void
+    {
+        $datas = [
+            [
+                'nom' => 'foo',
+                'prenom' => 'foo',
+                'tel' => '123456789',
+                'created_at' => DateTime::createFromFormat('Ymd H:i:s', '20200101 10:00:00'),
+                'updated_at' => DateTime::createFromFormat('Ymd H:i:s', '20200101 10:00:00')
+            ],
+            [
+                'nom' => 'bar',
+                'prenom' => 'bar',
+                'tel' => '123456789',
+                'created_at' => DateTime::createFromFormat('Ymd H:i:s', '20200201 11:00:00'),
+                'updated_at' => DateTime::createFromFormat('Ymd H:i:s', '20200501 12:00:00')
+            ],
+            [
+                'nom' => 'baz',
+                'prenom' => 'baz',
+                'tel' => '123456789',
+                'created_at' => DateTime::createFromFormat('Ymd H:i:s', '20200301 12:00:00'),
+                'updated_at' => DateTime::createFromFormat('Ymd H:i:s', '20200301 12:00:00')
+            ],
+           
+        ];
+
+
+        foreach ($datas as $data) {
+            // création d'un nouvel objet
+            $emprunteur = new Emprunteur();
+            // affectation des valeurs statiques
+            $emprunteur->setNom($data['nom']);
+            $emprunteur->setPrenom($data['prenom']);
+            $emprunteur->setTel($data['tel']);
+            $emprunteur->setCreatedAt($data['created_at']);
+            $emprunteur->setUpdatedAt($data['updated_at']);
+
+
+
+            // demande d'enregistrement de l'objet
+            $this->manager->persist($emprunteur);
         }
         ;
 
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             // création d'un nouvel objet
-            $auteur = new auteur();
+            $emprunteur = new $emprunteur();
             // affectation des valeurs dynamiques
-            $auteur->setNom($this->faker->word());
-            $auteur->setPrenom($this->faker->word());
+            $emprunteur->setNom($this->faker->word());
+            $emprunteur->SetPrenom($this->faker->word());
+            $emprunteur->SetTel($this->faker->mobileNumber());
+            $emprunteur->setCreatedAt($this->faker->dateTimeBetween('-10 week', '-6 week'));
+            $emprunteur->setUpdatedAt($this->faker->dateTimeBetween('+8 week', '+12 week'));
+
+            // demande d'enregistrement de l'objet
+            $this->manager->persist($emprunteur);
+        }
+        ;
+
+        $this->manager->flush();
+    }
+
+    public function loadEmprunt(): void
+    {
+        $datas = [
+            [
+                'date_emprunt' => DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-01 10:00:00'),
+                'date_retour' => DateTime::createFromFormat('Y-m-d H:i:s', '2020-03-01 10:00:00')
+            ],
+            [
+                'date_emprunt' => DateTime::createFromFormat('Y-m-d H:i:s', '2020-03-01 10:00:00'),
+                'date_retour' => DateTime::createFromFormat('Y-m-d H:i:s', '2020-04-01 10:00:00')
+            ],
+            [
+                'date_emprunt' => DateTime::createFromFormat('Y-m-d H:i:s', '2020-04-01 10:00:00'),
+                'date_retour' => null
+            ],
+            
+
+           
+        ];
+
+
+        foreach ($datas as $data) {
+            // création d'un nouvel objet
+            $emprunt = new Emprunt();
+            // affectation des valeurs statiques
+            $emprunt->setDateEmprunt($data['date_emprunt']);
+            $emprunt->setDateRetour($data['date_retour']);
+
 
 
             // demande d'enregistrement de l'objet
-            $this->manager->persist($auteur);
+            $this->manager->persist($emprunt);
+        }
+        ;
+
+        for ($i = 0; $i < 200; $i++) {
+            // création d'un nouvel objet
+            $emprunt = new $emprunt();
+            // affectation des valeurs dynamiques
+            $emprunt->setDateEmprunt($this->faker->dateTimeBetween('-10 week', '-6 week'));
+            $emprunt->setDateRetour($this->faker->dateTimeBetween('+8 week', '+12 week'));
+
+            // demande d'enregistrement de l'objet
+            $this->manager->persist($emprunt);
         }
         ;
 
